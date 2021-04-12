@@ -47,6 +47,7 @@ class PromiseA {
     if (this.status === REJECTED) {
       onrejected('my...' + this.reason)
     }
+    console.log(this.status);
     if (this.status === PENDING) {
       this.onfulfilledCallbacks.push(()=>{
         onfulfilled('my...' + this.value)

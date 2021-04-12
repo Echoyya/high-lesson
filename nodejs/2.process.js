@@ -1,3 +1,12 @@
+/**
+ *  1)platform  window =>win32 mac =>darwin  判断用户的系统
+ *  2)nextTick 用来代替promise ，是 优先于promise执行的微任务
+ *  3)argv  参数列表 
+ *  4) env 环境变量 win=> set xxx= xxx,mac =>export xxx= xxx  亲测 不生效
+ *  5) cwd (current working directory)  当前工作目录
+ */
+
+
 // console.log(Object.keys(process));
 
 /**

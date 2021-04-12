@@ -2,6 +2,12 @@
 
 // 读到的内容为字符串格式，
 
+/**
+ * 需求：怎么能让字符串执行。并且包着一层function()
+ *  1> eval   可能会导致模块之间的相互引用 影响作用域
+ *  2> new Function  模板引擎，会采用newfunction 的形式
+ *  3> node中 使用内置模块 vm,实现字符串代码的执行    runInThisContext
+ */
 
 const fs = require('fs')
 const path = require('path')

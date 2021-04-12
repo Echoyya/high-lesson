@@ -1,0 +1,1 @@
+module.exports = '有package.json文件，读取main入口：b/b.js '

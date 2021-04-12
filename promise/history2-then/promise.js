@@ -22,6 +22,9 @@ promise.then((data)=>{
 },(err)=>{
   console.log('failed1',err)
 })
+
+
+
 promise.then((data)=>{
   console.log('success2',data)
 },(err)=>{

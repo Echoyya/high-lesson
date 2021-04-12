@@ -1,0 +1,1 @@
+module.exports = '无package.json文件，默认查找:b/index.js '
