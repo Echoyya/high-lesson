@@ -2,13 +2,11 @@
 
 // 类型判断
 function isType(type, content) {
-  // [object String]
-  let t = Object.prototype.toString.call(content).replace(/\[object\s|\]/g, '')
+  let t = Object.prototype.toString.call(content).replace(/\[object\s|\]/g, '')  // [object String]
   return t === type
 }
 
 // console.log(isType('String','a'));
-
 
 // 高阶函数 
 function highIsType(type) {
@@ -28,4 +26,14 @@ arr.forEach(item => {
 // console.log(isString('a'));
 
 console.log(util);
-console.log(util.isRegExp(/\[\]/g));
+console.log(util.isRegExp(/\[\]/g));  // true
+// {
+//   isString: [Function],
+//   isNumber: [Function],
+//   isArray: [Function],
+//   isObject: [Function],
+//   isNull: [Function],
+//   isDate: [Function],
+//   isRegExp: [Function]
+// }
+

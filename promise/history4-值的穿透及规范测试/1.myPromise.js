@@ -8,7 +8,6 @@
 
 // 8. 当promise是异步代码时(定时器执行resolve),此时then方法中状态仍然是pending，
 
-
 const RESOLVED = 'RESOLVED'
 const REJECTED = 'REJECTED'
 const PENDING = 'PENDING'
@@ -17,33 +16,35 @@ const resolvePromise = (promise2, x, resolve, reject) => {
   // 规范里规定了一段代码，这个代码可以实现自己编写的promise和别人的promise可以进行交互
   if (promise2 === x) { // 不能自己等待自己完成
     // return reject(new TypeError('TypeError: Chaining cycle detected for promise #<Promise>'))
-    return reject(new TypeError('循环引用报错'))
+    return reject(new Error('循环引用报错'))
   }
   // x 不是null 或者是对象  || 函数
-  if (x !== null && (typeof x === 'object' || typeof x === 'function')){
+  if (x !== null && (typeof x === 'object' || typeof x === 'function')) {
     // Object.defineProperty(x,'then',{
     //   get(){
     //     throw new Error()
     //   }
     // })
-    try {  // 为防止then时 出现异常，Object.defineProperty
+    try { // 为防止then时 出现异常，Object.defineProperty
       let then = x.then // 取x 的then 方法 {then:{}}
-      if(typeof then === 'function'){  // 如果then 是一个函数， 就认为是一个promise，并调用then方法
+      if (typeof then === 'function') { // 如果then 是一个函数， 就认为是一个promise，并调用then方法
         // call第一个参数是this,后面的是成功回调 和 失败回调
-        then.call(x,y=>{   // 如果y是promise,就继续递归解析promise
-          resolvePromise(promise2,y,resolve,reject)
-        },e=>{  // 只要失败了就失败了
+        then.call(x, y => { // 如果y是promise,就继续递归解析promise
+          resolvePromise(promise2, y, resolve, reject)
+        }, e => { // 只要失败了就失败了
           reject(e)
         })
+      } else { // then 是一个普通对象，就直接成功即可
+        resolve(x)
       }
-    } catch (error) {
-      reject(error)
+    } catch (e) {
+      reject(e)
     }
-  }else{  // x 为普通值
+  } else { // x 为普通值
     resolve(x)
   }
 }
-class PromiseA {
+class Promise {
   constructor(executor) {
     this.status = PENDING
     this.value = undefined
@@ -68,7 +69,6 @@ class PromiseA {
     try {
       executor(resolve, reject) // 立即执行
     } catch (e) { //  错误处理，抛出异常
-      console.log(e, 'inner');
       reject(e)
     }
   }
@@ -77,11 +77,13 @@ class PromiseA {
   // 3. 错误处理，如果离自己最近的then没有错误处理(没有写错误处理) ，会向下找
   // 4. 每次执行完promise.then 方法后返回的都是一个“新的promise”   因为原有的promise状态一旦发生改变，就不能再改变，不符合实现规范
   then(onfulfilled, onrejected) {
+    onfulfilled = typeof onfulfilled === 'function' ? onfulfilled : v => v;
+    onrejected = typeof onrejected === 'function' ? onrejected : err => { throw err };
     let promise2 = new Promise((resolve, reject) => { // 为了实现链式调用
       if (this.status === RESOLVED) {
         try {
           setTimeout(() => {
-            let x = onfulfilled('my...' + this.value)
+            let x = onfulfilled(this.value)
             // x 可能会是一个promise
             resolvePromise(promise2, x, resolve, reject)
           })
@@ -93,7 +95,7 @@ class PromiseA {
       if (this.status === REJECTED) {
         try {
           setTimeout(() => {
-            let x = onrejected('my...' + this.reason)
+            let x = onrejected(this.reason)
             resolvePromise(promise2, x, resolve, reject)
           })
         } catch (e) {
@@ -104,7 +106,7 @@ class PromiseA {
         this.onfulfilledCallbacks.push(() => {
           try {
             setTimeout(() => {
-              let x = onfulfilled('my...' + this.value)
+              let x = onfulfilled(this.value)
               resolvePromise(promise2, x, resolve, reject)
             })
           } catch (e) {
@@ -114,7 +116,7 @@ class PromiseA {
         this.onrejectedCallbacks.push(() => {
           try {
             setTimeout(() => {
-              let x = onrejected('my...' + this.reason)
+              let x = onrejected(this.reason)
               resolvePromise(promise2, x, resolve, reject)
             })
           } catch (e) {
@@ -127,4 +129,16 @@ class PromiseA {
   }
 }
 
-module.exports = PromiseA
+// 测试自己的写的promise 是否符合a+规范
+Promise.defer = Promise.deferred = function(){
+  let dfd = {}
+  dfd.promise = new Promise((resolve,reject)=>{
+    dfd.resolve = resolve;
+    dfd.reject = reject
+  })
+  return dfd;
+}
+
+// npm install promises-aplus-tests -g
+// promises-aplus-tests ./1.myPromise.js
+module.exports = Promise
