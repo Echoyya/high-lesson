@@ -130,6 +130,7 @@ class Promise {
 }
 
 // 测试自己的写的promise 是否符合a+规范
+// promise的延迟对象
 Promise.defer = Promise.deferred = function(){
   let dfd = {}
   dfd.promise = new Promise((resolve,reject)=>{
