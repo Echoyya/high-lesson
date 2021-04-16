@@ -3,8 +3,8 @@
 
 // 内部也是基于发布订阅模式，收集观察者，状态变化后要通知观察者
 
-
-// vue中:可以说是观察者模式，因为存在 数据变化，更新视图
+// vue2中:可以说是观察者模式，因为存在 数据变化，更新视图
+// vue3中没有class
 
 // 也可以说是发布订阅模式：
 
@@ -14,7 +14,7 @@ class Subject{
     this.state = 'happy'
     this.obserers = []
   }
-  attach(o){
+  attach(o){   // 被观察者 进行收集
     this.obserers.push(o)
   }
   // set state(val){
