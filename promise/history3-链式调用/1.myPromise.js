@@ -35,6 +35,8 @@ const resolvePromise = (promise2, x, resolve, reject) => {
         },e=>{  // 只要失败了就失败了
           reject(e)
         })
+      }else{
+        resolve(x)
       }
     } catch (error) {
       reject(error)
@@ -72,10 +74,17 @@ class PromiseA {
       reject(e)
     }
   }
+  // 分析
   // 1. promise 成功和失败的回调的返回值，可以传递给外层的then
-  // 2. 如果返回的是 普通值的话（传递到下一次的成功中,不是错误不是promise就是普通值，包括对象），出错的情况(一定会走到下一次的失败)，可能还要promise的情况(会采用promise的状态，决定下一次的成功还是失败)
+  // 2. 如果返回的是 普通值的话 传递到下一次的成功中,（不是错误不是promise就是普通值，包括对象），出错的情况(一定会走到下一次的失败)，可能还要promise的情况(会采用第一个promise的状态，决定下一次的成功还是失败)
   // 3. 错误处理，如果离自己最近的then没有错误处理(没有写错误处理) ，会向下找
   // 4. 每次执行完promise.then 方法后返回的都是一个“新的promise”   因为原有的promise状态一旦发生改变，就不能再改变，不符合实现规范
+  // 5. return new Error()  返回的是错误对象，属于普通值走下一次then的成功， 而throw new Error() 是抛出异常，会走下一次的失败
+  // 6. 总结：如果返回一个普通值，除了promise ，就传递给下一个then的成功，如果返回一个失败的promise或者抛出异常，会走下一个then的失败
+
+  // 无论上一次的then是成功还是失败。只要是普通值，就会执行下一次的then的成功
+  // 如果then中方法返回的是一个promise，此时会根据 promise的结果来处理，是走成功还是失败，传入的是成功和失败的内容
+
   then(onfulfilled, onrejected) {
     let promise2 = new Promise((resolve, reject) => { // 为了实现链式调用
       if (this.status === RESOLVED) {

@@ -16,28 +16,36 @@ const resolvePromise = (promise2, x, resolve, reject) => {
   // 规范里规定了一段代码，这个代码可以实现自己编写的promise和别人的promise可以进行交互
   if (promise2 === x) { // 不能自己等待自己完成
     // return reject(new TypeError('TypeError: Chaining cycle detected for promise #<Promise>'))
-    return reject(new Error('循环引用报错'))
+    return reject(new TypeError('循环引用报错'))
   }
   // x 不是null 或者是对象  || 函数
   if (x !== null && (typeof x === 'object' || typeof x === 'function')) {
     // Object.defineProperty(x,'then',{
     //   get(){
-    //     throw new Error()
+    //     ++index == 2 && throw new Error() 
     //   }
     // })
+    let called; // 为了保证其他promise 库符合a+规范
     try { // 为防止then时 出现异常，Object.defineProperty
       let then = x.then // 取x 的then 方法 {then:{}}
-      if (typeof then === 'function') { // 如果then 是一个函数， 就认为是一个promise，并调用then方法
+      if (typeof then === 'function') { // 如果then 是一个函数， 就认为是一个promise，并调用then方法,
+        // 为啥不用x.then.call?  因为这个写会触发 getter可能会发生异常
         // call第一个参数是this,后面的是成功回调 和 失败回调
         then.call(x, y => { // 如果y是promise,就继续递归解析promise
+          if (called) return
+          called = true
           resolvePromise(promise2, y, resolve, reject)
         }, e => { // 只要失败了就失败了
+          if (called) return
+          called = true
           reject(e)
         })
       } else { // then 是一个普通对象，就直接成功即可
         resolve(x)
       }
     } catch (e) {
+      if (called) return
+      called = true
       reject(e)
     }
   } else { // x 为普通值
@@ -81,47 +89,46 @@ class Promise {
     onrejected = typeof onrejected === 'function' ? onrejected : err => { throw err };
     let promise2 = new Promise((resolve, reject) => { // 为了实现链式调用
       if (this.status === RESOLVED) {
-        try {
-          setTimeout(() => {
+        setTimeout(() => {
+          try {
             let x = onfulfilled(this.value)
             // x 可能会是一个promise
             resolvePromise(promise2, x, resolve, reject)
-          })
-        } catch (e) {
-          reject(e)
-        }
-
-      }
-      if (this.status === REJECTED) {
-        try {
-          setTimeout(() => {
-            let x = onrejected(this.reason)
-            resolvePromise(promise2, x, resolve, reject)
-          })
-        } catch (e) {
-          reject(e)
-        }
-      }
-      if (this.status === PENDING) {
-        this.onfulfilledCallbacks.push(() => {
-          try {
-            setTimeout(() => {
-              let x = onfulfilled(this.value)
-              resolvePromise(promise2, x, resolve, reject)
-            })
           } catch (e) {
             reject(e)
           }
         })
-        this.onrejectedCallbacks.push(() => {
+      }
+      if (this.status === REJECTED) {
+        setTimeout(() => {
           try {
-            setTimeout(() => {
-              let x = onrejected(this.reason)
-              resolvePromise(promise2, x, resolve, reject)
-            })
+            let x = onrejected(this.reason)
+            resolvePromise(promise2, x, resolve, reject)
           } catch (e) {
             reject(e)
           }
+        })
+      }
+      if (this.status === PENDING) {
+        this.onfulfilledCallbacks.push(() => {
+          setTimeout(() => {
+            try {
+              let x = onfulfilled(this.value)
+              resolvePromise(promise2, x, resolve, reject)
+            } catch (e) {
+                reject(e)
+            }
+          })
+        })
+        this.onrejectedCallbacks.push(() => {
+          setTimeout(() => {
+            try {
+              let x = onrejected(this.reason)
+              resolvePromise(promise2, x, resolve, reject)
+            } catch (e) {
+                reject(e)
+            }
+          })
         })
       }
     })
@@ -131,9 +138,9 @@ class Promise {
 
 // 测试自己的写的promise 是否符合a+规范
 // promise的延迟对象
-Promise.defer = Promise.deferred = function(){
+Promise.defer = Promise.deferred = function () {
   let dfd = {}
-  dfd.promise = new Promise((resolve,reject)=>{
+  dfd.promise = new Promise((resolve, reject) => {
     dfd.resolve = resolve;
     dfd.reject = reject
   })
