@@ -62,11 +62,9 @@ Promise.reject(new Promise((resolve, reject) => {
 })
 
 // catch 方法演变过程
-Promise.reject(new Promise((resolve, reject) => {
-  setTimeout(() => {
-    resolve(400)
-  }, 1000)
-})).then(data => {
+new Promise((resolve, reject) => {
+  reject('失败')
+}).then(data => {
   console.log(data);
 }).then(null, err => {
   console.log(err, 'errrrrr');
@@ -107,20 +105,23 @@ Promise.reject(new Promise((resolve, reject) => {
 //     }
 //   })
 // }
-Promise.all([1, 2, 3, new Promise((resolve, reject) => {
-  setTimeout(() => {
-    resolve('成功')
-  }, 1000)
-}), new Promise((resolve, reject) => {
-  setTimeout(() => {
-    resolve('成功12')
-    // reject('失败')
-  }, 1000)
-})]).then(data => {
-  console.log(data);
-}).catch(err => {
-  console.log(err);
-})
+Promise.all([
+  1, 2, 3, 
+  new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve('成功')
+    }, 1000)
+  }), 
+  new Promise((resolve, reject) => {
+    setTimeout(() => {
+      // resolve('成功')
+      reject('失败')
+    }, 1000)})
+  ]).then(data => {
+    console.log(data);
+  }).catch(err => {
+    console.log(err);
+  })
 
 
 // Promise.finally
@@ -129,15 +130,15 @@ Promise.all([1, 2, 3, new Promise((resolve, reject) => {
 Promise.race([ new Promise((resolve, reject) => {
   setTimeout(() => {
     resolve('成功')
-  }, 1000)
+  }, 2000)
 }), new Promise((resolve, reject) => {
   setTimeout(() => {
-    resolve('成功12')
-    // reject('失败')
+    // resolve('成功12')
+    reject('失败')
   }, 1000)
 })]).then(data => {
-  console.log(data);
+  console.log(data,'d');
 }).catch(err => {
-  console.log(err);
+  console.log(err,'e');
 })
 
