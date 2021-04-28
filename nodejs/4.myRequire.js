@@ -4,7 +4,7 @@
  * 2. 读取这个文件，需要增加一个函数，函数内部需要module.exports 导出模块
  * 3. 让函数执行
  */
-
+ 
 // 1. Module._load   加载模块
 // 2. Module._extensions 代表一个对象，存放着很多处理的方法， 如：'.js'(){}
 // 3. Module 根据文件名创建模块  exports  id

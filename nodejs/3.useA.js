@@ -5,8 +5,8 @@
 /**
  * 需求：怎么能让字符串执行。并且包着一层function()
  *  1> eval   可能会导致模块之间的相互引用 影响作用域
- *  2> new Function  模板引擎，会采用newfunction 的形式
- *  3> node中 使用内置模块 vm,实现字符串代码的执行    runInThisContext
+ *  2> new Function  模板引擎，会采用newfunction 的形式.node中可以获取全局的变量，浏览器中不会
+ *  3> node中 使用内置模块 vm,实现字符串代码的执行 不受影响(沙箱环境)    runInThisContext
  */
 
 const fs = require('fs')
