@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    jsonp({
+      url:"http://localhost:3000/say",
+      params:{ wd:'woaini'},
+      cb:'show'
+    }).then(data=>{
+      console.log(data);
+    })
+    /**
+     * 封装一个通用的jsonp 跨域的方法，
+     * 特点：
+     *  1. 引用第三方的资源，只能发送get请求，不支持post put delete 等
+     *  2. 不安全，xss攻击 ，引用的数据中存在script脚本，可能会出现一些不可预料的问题，
+     *  3. 目前大多数网站处于安全考虑，已经不再采用该种方式
+     */ 
+    
+    function jsonp({url,params,cb}){
+      return new Promise((resolve,reject)=>{
+        let script = document.createElement('script')
+        window[cb] = function (data){
+          resolve(data)
+          document.body.removeChild(script)
+        }
+        params = {...params,cb}  // wd=a&cb=show
+        let arrs = []
+        for(let key in params){
+          arrs.push(`${key}=${params[key]}`)
+        }
+        script.src = `${url}?${arrs.join('&')}`
+        document.body.appendChild(script)
+      })
+    }
+  </script>
+
+  <!-- <script>
+    function show(data) {
+      console.log(data);
+    }
+    // show({"q":"a","p":false,"g":[{"type":"sug","sa":"s_1","q":"a4纸尺寸是多少厘米"},{"type":"sug","sa":"s_2","q":"abb式的词语"},{"type":"sug","sa":"s_3","q":"abab式的词语"},{"type":"sug","sa":"s_4","q":"aabc式词语大全"},{"type":"sug","sa":"s_5","q":"a3纸多大"},{"type":"sug","sa":"s_6","q":"a股"},{"type":"sug","sa":"s_7","q":"abcc的成语"},{"type":"sug","sa":"s_8","q":"app下载"},{"type":"sug","sa":"s_9","q":"abcc的四字词语"},{"type":"sug","sa":"s_10","q":"a型血的人是什么性格"}],"slid":"1673116949931393872","queryid":"0x481b005c588350"})
+  </script>
+  <script src="https://www.baidu.com/sugrec?prod=pc&wd=a&cb=show"></script> -->
+</body>
+</html>
