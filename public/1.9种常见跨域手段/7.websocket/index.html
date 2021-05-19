@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <!-- 有较快的传输速度，双工，可以实现浏览器向服务器发送数据，也可以实现 服务器向浏览器发送数据(也是与http协议的区别，不过底层传输数据都是tcp协议) -->
+  <!-- websocket 是没有跨域限制的 没有域也可以-->
+  
+  <script>
+    // 高级api  不兼容  socket.io   
+    let socket = new WebSocket('ws://localhost:3000')
+    socket.onopen = function () {
+      socket.send('我爱你')
+    }
+    socket.onmessage = function (e) {
+      console.log(e.data);
+    }
+  </script>
+</body>
+</html>

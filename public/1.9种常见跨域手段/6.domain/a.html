@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    a.echoyya.com
+    <!-- 域名 -->
+    <!-- a 通过 http://a.echoyya.com:3000/a.html 访问b -->
+    <iframe src="http://b.echoyya.com:3000/b.html" frameborder="0" id="iframe" onload="load()"></iframe>
+    <script>
+        // document.domain 使用这种方式传递数据，需要使页面彼此间属于一级域名和二级域名的关系
+        document.domain = 'echoyya.com'
+        function load() {
+            let iframe = document.getElementById('iframe')
+            console.log(iframe.contentWindow.a);
+        }
+    </script>
+</body>
+
+</html>

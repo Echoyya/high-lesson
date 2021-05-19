@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+    <script>
+      let xhr = new XMLHttpRequest() 
+      // document.cookie = 'name=yya'
+      // 允许携带cookie
+      // xhr.withCredentials = true
+      xhr.open('get','http://localhost/a.json',true)   // true 表示是否异步
+      // 请求包含三个部分：请求行、请求头、请求体
+      // xhr.setRequestHeader('name','echoyya')
+      // xhr.setRequestHeader('age','18')
+      xhr.onreadystatechange = function () { 
+        if(xhr.readyState === 4){
+          if(xhr.status >= 200 && xhr.status < 300 || xhr.status === 304){
+            console.log(xhr.response);
+            // console.log(xhr.getResponseHeader('name'));
+          }
+        }
+      }
+      xhr.send()
+    </script>
+</body>
+</html>
