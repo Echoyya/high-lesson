@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // 查找父级,b 由c 引用,     c 由a 引用
+
+        // a->c,c->b,b->a 
+        // 最后在由a,监控hash 值,只要 hash 值变化,就证明获取到了返回的数据
+        window.parent.parent.location.hash = location.hash
+    </script>
+</body>
+</html>

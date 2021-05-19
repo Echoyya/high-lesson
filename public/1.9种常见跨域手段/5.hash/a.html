@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!-- 路径后面的 hash 值,可以用来通讯 -->
+    <!-- 需求:a想访问 c -->
+    <!-- a 传给 c一个 hash 值,c 收到 hash 值后,c 把值在传给b,因为 ab 同域,b 在将结果放在 a 的 hash 中 -->
+    <iframe src="http://localhost:4000/c.html#iloveyou"></iframe>
+    <script>
+        window.onhashchange = function(){
+            console.log(location.hash);
+        }
+    </script>
+</body>
+</html>
