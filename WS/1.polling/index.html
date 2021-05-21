@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <!-- polling -->
+  <!-- 轮循是客户端和服务器之间会一直进行连接，每隔一段时间就询问一次 -->
+  <!-- 这种方法连接数会很多，一个接受，一个发送，而且每次发送请求都会有http的header，会消耗流量，也会消耗CPU的利用率 -->
+  <div id="clock"></div>
+  <script>
+    let clock = document.getElementById('clock')
+    setInterval(() => {
+      let xhr = new XMLHttpRequest;
+      xhr.open('get','/clock',true)
+      xhr.onreadystatechange = function(){
+        if(xhr.readyState === 4 && xhr.status === 200){
+          // clock.innerText = xhr.response   // 获取的结果 会responseText根据的变化而变
+          clock.innerText = xhr.responseText  // 获取的字符串形式的响应体
+        }
+      }
+      xhr.send()
+    }, 1000);
+  </script>
+</body>
+</html>

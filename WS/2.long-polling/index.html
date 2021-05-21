@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <!-- long-polling -->
+  <!-- 长轮循是对轮循的改良版，客户端发送请求给服务器之后，看有没有新得消息，如果没有新消息，就一直等待 -->
+  <!-- 当有新消息的时候，才会返回给客户端，在某种程度上减少了网络带宽和cpu利用率的问题 -->
+  <!-- 由于http数据包的to欧布数据往往很大，通常有400多个字节，但是真正呗服务器需要的数据却很少，有时只有10字节左右，这样的数据包在网路上周期性的传输，难免对网络带宽是一种浪费 -->
+
+  <!-- 链接会一直保持，直到有数据更新或链接超时，此时服务器不能在发送数据 -->
+  <div id="clock"></div>
+  <script>
+    let clock = document.getElementById('clock')
+    function send(){
+      let xhr = new XMLHttpRequest;
+      xhr.open('get','/clock',true)
+      xhr.onreadystatechange = function(){
+        if(xhr.readyState === 4 && xhr.status === 200){
+          clock.innerText = xhr.responseText  
+          send()
+        }
+      }
+      xhr.send()
+    }
+    send()
+  </script>
+</body>
+</html>

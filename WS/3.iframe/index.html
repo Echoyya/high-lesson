@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <!-- iframe 流 -->
+  <style>
+    div{
+      height: 100px;
+      width:230px; 
+      border: 1px solid slateblue;
+      line-height: 100px;
+      text-align: center;
+    }
+  </style>
+  <div id="clock"></div>
+  <iframe src="/clock" frameborder="0"></iframe>
+  <script>
+    let clock = document.getElementById('clock')
+    function setTime(st) { 
+      clock.innerText = st
+    }
+  </script>
+</body>
+</html>

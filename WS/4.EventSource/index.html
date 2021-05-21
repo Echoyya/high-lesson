@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    div{
+      border: 1px solid #ce4;
+      width: 300px;
+      height: 40px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    p{
+      color: #888;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <!-- EventSource 流 -->
+  <p>默认事件message：</p>
+  <div id="clock"></div>
+  <p>自定义事件 yya：</p>
+  <div id="yya"></div>
+  <script>
+    /**
+     * EventSource的实现同样分为两部分，
+        **`浏览器端`**:
+        1. 在浏览器端创建一个`EventSource实例`，向服务器发起连接
+        2. **`open`**:连接一旦建立，就会触发open事件，可以在`onopen`属性定义回调函数
+        3. **`message`**:客户端收到服务器发来的数据，就会触发message事件,可以在`onmessage`属性定义回调函数。
+        4. **`error`**:如果发生通信错误(如连接中断,服务器返回数据失败)，就会触发error事件，可以在`onerror`属性定义回调函数。
+        5. **`close`**:用于关闭 SSE 连接。`source.close();`
+        6. **`自定义事件`**:EventSource规范允许服务器端执行自定义事件，客户端监听该事件即可，需要使用`addEventListener`
+    */
+    let sse = new EventSource('/clock')
+    let clock = document.getElementById('clock')
+    let yya = document.getElementById('yya')
+ 
+    // 监听连接刚打开时被调用
+    sse.onopen = function () {  
+      console.log('open');
+    }
+     // 监听服务器发过来的信息
+     sse.onmessage = function (event) { 
+      clock.innerText = event.data
+    }
+    // 监听链接请求失败 关闭流
+    sse.onerror = function (event) {  
+      console.log('error');
+      sse.close();
+    }
+    // 监听自定义事件, 不能通过on的方式的去绑定
+    sse.addEventListener('yya', function (event) {
+      yya.innerText = event.data
+    }, false);
+  </script>
+</body>
+</html>

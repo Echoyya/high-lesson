@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <!-- WebSocket 是HTML5下一种新的协议，它诞生于2008年，2011年成为国际标准，现在所有浏览器都已支持。**`它实现了浏览器与服务器全双工通信`**,能更好的节省服务器资源和带宽,并达到实时通讯的目的,最大特点就是:**`服务器可以主动向客户端推送信息，客户端也可以主动向服务器发送信息，是真正的双向平等对话`**。 -->
+  <!-- **优势及特点：**
+    1. 在客户端和服务器之间保有一个持有的连接，两边可以随时给对方发送数据，有很强的实时性;
+    2. 属于应用层协议，基于TCP传输协议，并且握手阶段采用 HTTP 协议，因此握手时不容易屏蔽，能通过各种 HTTP 代理服务器;
+    3. 可以发送文本，也可以支持二进制数据的传输;
+    4. 数据格式比较轻量，性能开销小，通信高效;
+    5. 没有同源限制，客户端可以与任意服务器通信;
+    6. 协议标识符是ws(如果加密，则为wss)，服务器网址就是 URL;
+ -->
+  <script>
+    let socket = new WebSocket('ws://localhost:8888')
+    socket.onopen = function () {
+      console.log('1. 客户端连接上了服务器',new Date().getTime());
+      socket.send('3. 你好')
+    }
+    socket.onmessage = function (e) {
+      console.log('6',e.data);
+    }
+  </script>
+</body>
+
+</html>
+
+
+
+
