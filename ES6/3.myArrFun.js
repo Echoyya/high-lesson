@@ -9,6 +9,7 @@
  * 8. includes  
  * 9. Array.from  
  * 10. Array.of  
+ * 11. 交集  
  */
 
 // 1. reduce => myReduce  收敛 累加器，返回累加后的结果
@@ -148,4 +149,17 @@
   
   console.log(Array(7));          // [  <7 empty items> ]
   console.log(Array(1, 2, 3));    // [1, 2, 3]
+}
+
+// 交集
+{
+  function  join(arr1,arr2){
+    var arr3;
+    arr3 = arr1.filter(function(num) {
+        return arr2.indexOf(num) !== -1;
+    });
+    console.log(arr3); //输出[2, 3]
+  }
+  
+  join([1,2,3,5], [2,3,6,8])
 }
