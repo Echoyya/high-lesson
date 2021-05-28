@@ -7,8 +7,8 @@ let rs = new ReadStream('a.txt', {
   encoding: null,    // 默认buffer
   mode: 0o666,       // 可读可写
   autoClose: true,   // 读取完毕后关闭
-  start: 0,          // 从第几位读取 包前又包后
-  end: 9,            // 读取到第几位,不传表示读到末尾,包尾,如0-1 长度算2
+  start: 1,          // 从第几位读取 包前又包后
+  end: 4,            // 读取到第几位,不传表示读到末尾,包尾,如0-1 长度算2
   highWaterMark: 3   // 每次读取的个数
 })
 
@@ -20,7 +20,7 @@ rs.on("open", (fd) => {
 // rs本身是非流动模式，只要监听了data事件后，就变成了了流动模式
 rs.on("data", (chunk) => {
   console.log('chunk',chunk.toString());
-  // rs.pause()     // 读完一次 暂停，不在触发data事件
+  rs.pause()     // 读完一次 暂停，不在触发data事件
 });
 
 // 当文件读取完毕胡触发end事件
@@ -37,6 +37,6 @@ rs.on("error", (err) => {
 })
 
 // 过了1s 在恢复，再次执行data事件
-// setInterval(()=>{
-//   rs.resume()
-// },1000)
+setInterval(()=>{
+  rs.resume()
+},1000)

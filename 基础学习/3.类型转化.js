@@ -7,7 +7,7 @@ console.log(1+undefined);  // NaN
 console.log(1+{});  // 1[object Object]
 
 
-// 3) 非数字相加，会尝试将两者都转为数字，在尝试将其转为字符串,如果有一方是字符串，并未进行字符串拼接运算
+// 3) 非数字相加，会尝试将两者都转为数字，在尝试将其转为字符串,如果有一方是字符串，并会进行字符串拼接运算
 console.log(true + true); // 2
 console.log(true + {});   // true[object Object]
 
@@ -22,7 +22,7 @@ let obj = {
     return 200  // 当valueOf 返回的不是原始数据类型时。会调用toString方法
   }
 }
-console.log(true + obj );   // 101 会先调 valueOf?
+console.log(true + obj );   // 101 201 会先调 valueOf?
 console.log({}.valueOf() ); // {} 一个对象通过valueOf后，还不能转成字符串时，才会去调用toString()
 
 // let a ={name:'yya'}
@@ -39,7 +39,27 @@ let obj1 = {
   }
 }
 console.log(true + obj1 );   // Cannot convert object to primitive value
-
+// ----------------------------------------------------------------------------
+// 有意思的事情： a == 1 && a == 2 && a == 3
+{
+  let count = 1
+  let a = {
+    valueOf: function(){return count++}
+  }
+  if(a==1 && a==2 && a==3){
+    console.log(a==4 && a==5 && a==6) // true
+  }
+}
+// 有意思的事情： a === 1 && a === 2 && a === 3
+{
+  let count = 1;
+  Object.defineProperty(global, 'a', {
+      get: function() {
+          return count ++;
+      }
+  });
+  console.log(a===1 && a===2 && a===3)
+}
 
 // ----------------------------------------------------------------------------
 // 可以自行定义转化的方法，默认会先走自己定义的
@@ -86,4 +106,5 @@ console.log([] == ![]);    // true
  *  0 == 0  true
  */
  console.log({} == '[object Object]');  // 对象和字符串，数字symbol比较时，会把对象转换成原始数据类型(先valueOf()  再toString())
+
 
