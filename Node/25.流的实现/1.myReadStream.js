@@ -33,6 +33,18 @@ class ReadStream extends EventEmitter {
       })
     }
   }
+  pipe(ws){
+    this.on('data',(data)=>{ 
+      let flag = ws.write(data)
+      if(!flag){
+        this.pause()
+      }
+    })
+    ws.on('drain',()=>{
+      this.resume()
+    })
+
+  }
   read() {
     if(typeof this.fd !== 'number'){
       return this.once('open',()=>this.read())

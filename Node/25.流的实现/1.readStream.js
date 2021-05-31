@@ -17,7 +17,7 @@ rs.on("open", (fd) => {
 })
 
 // 会监听用户绑定了 data事件，就会触发响应的回调  不停的触发
-// rs本身是非流动模式，只要监听了data事件后，就变成了了流动模式
+// rs本身是非流动模式，只要监听了data事件后，就变成了流动模式
 rs.on("data", (chunk) => {
   console.log('chunk',chunk.toString());
   rs.pause()     // 读完一次 暂停，不在触发data事件
@@ -40,3 +40,21 @@ rs.on("error", (err) => {
 setInterval(()=>{
   rs.resume()
 },1000)
+
+
+// 文件的可读流 基于 stream模块的 Readable这个类  ReadStream 继承于 Readable
+
+//ReadStream.__proto__ = Readable 继承静态属性和方法
+//ReadStream.prototype.__proto__ = Readable.prototype 继承原型方法
+//Readable.call(this) 继承实例属性  
+
+// 我们fs.createReadStream()  是有open方法的，但是可读流没有这个方法
+// 父类 Readble会提供一个read方法 -> 会调用子类的_read方法 (不同的子类实现的_read不同)
+
+// extends + super
+
+// 1) 内部会先打开文件，并且直接进行读取操作 （默认是暂停模式）
+// 2）监控用户是否绑定了data事件 （resume） 开始读取数据 
+// 3) fs.read方法 将数据读取到  
+// 4）调用push方法 （父类提供的）  
+// 5）触发data事件
