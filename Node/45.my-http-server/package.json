@@ -1,0 +1,19 @@
+{
+  "name": "45.my-http-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "bin": {
+    "mhs": "./bin/www.js",
+    "my-http-server": "./bin/www.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^4.1.1",
+    "commander": "^7.2.0",
+    "ejs": "^3.1.6",
+    "mime": "^2.5.2"
+  }
+}
